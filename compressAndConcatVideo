@@ -1,0 +1,23 @@
+#!/bin/bash
+###compress video files in dvd driver
+
+#compress all the .VOB files in dvd driver and store them in ./ as tempfile0.mp4 tempfile1.mp4 ……and so on
+a=0
+for filename in `find /media/NEW/VIDEO_TS/ -name "VTS*.VOB"`
+do
+        ffmpeg -i $filename -b 600k ./tempfile$a.mp4
+        a=$[$a + 1]
+done
+
+#create the txt file to list each compressed mp4 file name
+if [ -e ./fileList.txt ];then
+rm -f ./fileList.txt
+fi;
+
+for filename1 in `find ./ -maxdepth 1 -name 'tempfile*mp4' | sort -n -t "e" -k 3`
+do
+      echo "file '$filename1'" >> fileList.txt
+done
+
+#concatenate compressed mp4 files
+ffmpeg -f concat -safe 0 -i fileList.txt -c copy concat.mp4
