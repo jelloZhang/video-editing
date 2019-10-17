@@ -5,6 +5,7 @@
 a=0
 for filename in `find /media/NEW/VIDEO_TS/ -name "VTS*.VOB"`
 do
+        ffmpeg -i $filename -b 600k `basename $filename .VOB`.mp4       #or the next two lines
         ffmpeg -i $filename -b 600k ./tempfile$a.mp4
         a=$[$a + 1]
 done
